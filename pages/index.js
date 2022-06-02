@@ -4,8 +4,8 @@ export default function IndexPage(props) {
   // props argument will receive data returned from getServerSideProps
   return (
     <div>
-      {/* // print the hello object passed from getServerSideProps */}
-      {props.hello}
+      {/* Print page title read from Contentful */}
+      <h1>{props.data.data.pageCollection.items[0].title}</h1>
       <Link href="/about">
         <a>About</a>
       </Link>
