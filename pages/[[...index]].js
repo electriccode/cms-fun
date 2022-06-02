@@ -14,8 +14,22 @@ export default function IndexPage(props) {
 }
 
 export async function getServerSideProps(context) {
+  // for home page query is a blank object {}
+  // for other pages, it's an array of url paths under key index
+  // eg for /about its { index: ['about'] }
+  // for /about/contactus it's { index: ['about', 'contactus'] }
+  const { query } = context;
+  // predicate for homepage
+  let predicate = "where: { slug_exists: false }";
+  const isNotAHomePage = query.index;
+  if (isNotAHomePage) {
+    // holds complete slug as mentioned in Contentful
+    // eg for /about/contactus it would be "aboutus/contactus"
+    const slug = query.index.join("/");
+    predicate = 'where: { slug: \\"' + slug + '\\" }';
+  }
   const graphqlQuery = `query {
-    pageCollection {
+    pageCollection (limit: 1, ${predicate}) {
       items {
         title
       }
